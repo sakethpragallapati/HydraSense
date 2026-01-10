@@ -1,6 +1,8 @@
 numpy
 pandas
-matplot-lib
+matplotlib
 seaborn
 scikit-learn
+xgboost
+lightgbm
 -e .
