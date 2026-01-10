@@ -6,6 +6,7 @@ import sys
 from sklearn.model_selection import train_test_split
 
 from src.components.data_transformation import DataTransformation
+from src.components.model_trainer import ModelTrainer
 
 from src.exception import CustomException
 from src.logger import logging
@@ -62,3 +63,11 @@ if __name__ == "__main__":
         ingestion.data_ingestion_config.train_data_path,
         ingestion.data_ingestion_config.test_data_path
     )
+    preprocessed_train_array = transformation_results[0]
+    preprocessed_test_array = transformation_results[1]
+
+    trainer = ModelTrainer()
+    model_report = trainer.initiate_model_training(preprocessed_train_array,preprocessed_test_array)
+
+    print(f"Best model: {model_report[0]}")
+    print(f"accuracy: {model_report[1]}")
