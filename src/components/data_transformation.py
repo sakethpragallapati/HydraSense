@@ -27,9 +27,9 @@ class DataTransformation:
 
         try:
             numerical_pipeline_x = Pipeline([
-            ("imputer",SimpleImputer(strategy="mean")),
-            ("scale",StandardScaler())
-        ])
+                ("imputer",SimpleImputer(strategy="mean")),
+                ("scale",StandardScaler())
+            ])
 
             categorical_pipeline_x = Pipeline([
                 ("imputer",SimpleImputer(strategy="most_frequent")),

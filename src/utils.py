@@ -34,3 +34,12 @@ def test_model(y_test,y_pred)->int:
         custom_exception = CustomException(e, sys)
         logging.error(custom_exception)
         raise custom_exception
+
+def load_object(file_path : str):
+    try:
+        with open(file_path,"rb") as file_object:
+            return pickle.load(file_object)
+    except Exception as e:
+        custom_exception = CustomException(e, sys)
+        logging.error(custom_exception)
+        raise custom_exception

@@ -224,3 +224,24 @@ notebook/data/
 *.h5
 *.pt
 *.onnx
+
+# React / Node
+node_modules/
+build/
+dist/
+
+# Frontend env files
+.env.*
+.env.local
+
+# Node logs & cache
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.eslintcache
+.parcel-cache/
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db
