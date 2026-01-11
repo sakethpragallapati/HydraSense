@@ -1,0 +1,34 @@
+# .dockerignore
+
+# --- VERSION CONTROL ---
+.git
+.gitignore
+
+# --- DEPENDENCIES (Critical to ignore these) ---
+**/node_modules
+**/venv
+**/.venv
+**/env
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+
+# --- ARTIFACTS & DATA ---
+# We generally WANT artifacts in the image so it works standalone,
+# but we ignore the raw data and logs to save space.
+notebook/data/
+logs/
+
+# --- FRONTEND/BACKEND BUILD FILES ---
+frontend/build
+frontend/dist
+backend/dist
+
+# --- SYSTEM FILES ---
+.DS_Store
+Thumbs.db
+
+# --- SECRETS ---
+.env
+.env.local

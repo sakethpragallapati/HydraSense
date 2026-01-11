@@ -16,13 +16,14 @@ app.get("/",(req,res)=>{
     res.send("Hello World!!");
 })
 
+const ML_SERVICE_URL = process.env.FLASK_API_URL || "http://127.0.0.1:7000";
 app.post("/predict",async(req,res)=>{
 
     try{
         const user_data = req.body;
 
     const response = await axios.post(
-        "http://127.0.0.1:7000/predictData",
+        `${ML_SERVICE_URL}/predictData`,
         user_data,
          {
             headers: {

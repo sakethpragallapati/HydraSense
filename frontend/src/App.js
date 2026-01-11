@@ -7,6 +7,8 @@ import { Droplet, User, Weight, Activity, Cloud, MapPin } from "lucide-react";
 import InputField from "./Components/InputField";
 import CustomSelect from "./Components/CustomSelect";
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+
 function App() {
   // State for form data
   const [formData, setFormData] = useState({
@@ -98,7 +100,7 @@ function App() {
     };
 
     try {
-      const response = await axios.post("http://localhost:5000/predict", payload);
+      const response = await axios.post(`${BACKEND_URL}/predict`, payload);
       if (response.data && response.data.model_prediction) {
         setPrediction(response.data.model_prediction);
       }
