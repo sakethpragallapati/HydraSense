@@ -1,38 +1,346 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+body {
+  background: linear-gradient(180deg, #E3F2FD 0%, #F1F8E9 100%);
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 900px;
+  padding: 2rem;
+}
+
+/* Header Section */
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.title-container {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-.App-link {
-  color: #61dafb;
+.title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #0288D1;
+  margin: 0;
+  letter-spacing: -0.5px;
 }
 
-@keyframes App-logo-spin {
+.subtitle {
+  color: #546E7A;
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.tags {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #0288D1;
+  border: 1px solid rgba(30, 136, 229, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Form Card */
+.form-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.card-icon-container {
+  margin-bottom: 0.75rem;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0288D1;
+  margin-bottom: 0.5rem;
+}
+
+.card-subtitle {
+  font-size: 0.875rem;
+  color: #78909C;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #37474F;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.label-icon {
+  display: flex;
+  align-items: center;
+}
+
+.input-group input {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #CFD8DC;
+  background: #FAFAFA;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  outline: none;
+  color: #37474F;
+}
+
+.input-group input:focus {
+  background: #ffffff;
+  border-color: #90CAF9;
+  box-shadow: 0 0 0 3px rgba(144, 202, 249, 0.2);
+}
+
+/* Custom Dropdown Styling */
+.custom-select-container {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-trigger {
+  padding: 0.75rem 1rem;
+  background: #FAFAFA;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #90A4AE;
+  transition: all 0.2s ease;
+  border: 1px solid #CFD8DC;
+}
+
+.custom-select-trigger.selected {
+  color: #37474F;
+}
+
+.custom-select-trigger.open {
+  border-color: #90CAF9;
+  box-shadow: 0 0 0 3px rgba(144, 202, 249, 0.2);
+  background: #ffffff;
+}
+
+.select-arrow {
+  font-size: 0.65rem;
+  transition: transform 0.2s ease;
+  color: #1E88E5;
+}
+
+.custom-select-options {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 10;
+  border: 1px solid #E0E0E0;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(-8px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+.custom-option {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.15s ease;
+  color: #546E7A;
+}
+
+.custom-option:hover {
+  background: #E3F2FD;
+  color: #1565C0;
+}
+
+/* Button & Result */
+.submit-btn {
+  width: 100%;
+  padding: 0.875rem;
+  background: #1E88E5;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submit-btn:hover {
+  background: #1976D2;
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.result-overlay {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid;
+  animation: fadeIn 0.5s ease;
+}
+
+.result-overlay.good {
+  background: #E8F5E9;
+  border-color: #4CAF50;
+  color: #2E7D32;
+}
+
+.result-overlay.poor {
+  background: #FFEBEE;
+  border-color: #F44336;
+  color: #C62828;
+}
+
+.result-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.result-subtext {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Weather Input Specifics */
+.weather-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.weather-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #37474F;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.detect-weather-btn {
+  background: transparent;
+  border: 1px solid #90CAF9;
+  color: #1E88E5;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all 0.2s ease;
+}
+
+.detect-weather-btn:hover {
+  background: #E3F2FD;
+  transform: translateY(-1px);
+}
+
+.detect-weather-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
