@@ -3,22 +3,13 @@ version: '3.8'
 services:
   ml-service:
     container_name: HydraSense-ML-Service
-    build:
-      context: .
-      dockerfile: ml-services/Dockerfile.ml
+    image: sakethpragallapati/hydrasense-ml-service:latest
     ports:
       - "7000:7000"
-    volumes:
-      - ./src:/app/src
-      - ./ml-services:/app/ml-services
-      - ./artifacts:/app/artifacts
-      - ./logs:/app/logs
 
   backend:
     container_name: HydraSense-Backend
-    build:
-      context: .
-      dockerfile: backend/Dockerfile.backend
+    image: sakethpragallapati/hydrasense-backend:latest
     ports:
       - "5000:5000"
     volumes:
@@ -31,17 +22,11 @@ services:
 
   frontend:
     container_name: HydraSense-Frontend
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile.frontend
+    image: sakethpragallapati/hydrasense-frontend:latest
     ports:
       - "3000:3000"
     env_file:
       - ./frontend/.env
-    volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/public:/app/public
-      - /app/node_modules
     environment:
       - REACT_APP_BACKEND_URL=http://localhost:5000
     stdin_open: true
