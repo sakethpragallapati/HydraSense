@@ -7,7 +7,7 @@ import { Droplet, User, Weight, Activity, Cloud, MapPin } from "lucide-react";
 import InputField from "./Components/InputField";
 import CustomSelect from "./Components/CustomSelect";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function App() {
   // State for form data

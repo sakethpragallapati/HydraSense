@@ -12,11 +12,8 @@ services:
     image: sakethpragallapati/hydrasense-backend:latest
     ports:
       - "5000:5000"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
     environment:
-      - FLASK_API_URL=http://ml-service:7000
+      - FLASK_API_URL=https://hydrasense-ml-service.onrender.com    
     depends_on:
       - ml-service
 
@@ -28,6 +25,6 @@ services:
     env_file:
       - ./frontend/.env
     environment:
-      - REACT_APP_BACKEND_URL=http://localhost:5000
+      - REACT_APP_BACKEND_URL=https://hydrasense-backend.onrender.com
     stdin_open: true
     tty: true

@@ -16,7 +16,7 @@ app.get("/",(req,res)=>{
     res.send("Hello World!!");
 })
 
-const ML_SERVICE_URL = process.env.FLASK_API_URL || "http://127.0.0.1:7000";
+const ML_SERVICE_URL = process.env.FLASK_API_URL;
 app.post("/predict",async(req,res)=>{
 
     try{
