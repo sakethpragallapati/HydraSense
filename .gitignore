@@ -50,7 +50,6 @@ venv.bak/
 
 # Project specific data and artifacts
 artifacts/
-notebook/data/
 
 # NODE.JS & FRONTEND
 # Dependencies (Recursive for all subfolders)

@@ -53,21 +53,3 @@ class DataIngestion:
             custom_exception = CustomException(e,sys)
             logging.info(custom_exception)
             raise custom_exception
-
-if __name__ == "__main__":
-    ingestion = DataIngestion()
-    ingestion.initiate_ingestion()
-
-    transformation = DataTransformation()
-    transformation_results = transformation.initiate_transformation(
-        ingestion.data_ingestion_config.train_data_path,
-        ingestion.data_ingestion_config.test_data_path
-    )
-    preprocessed_train_array = transformation_results[0]
-    preprocessed_test_array = transformation_results[1]
-
-    trainer = ModelTrainer()
-    model_report = trainer.initiate_model_training(preprocessed_train_array,preprocessed_test_array)
-
-    print(f"Best model: {model_report[0]}")
-    print(f"accuracy: {model_report[1]}")
