@@ -22,7 +22,7 @@ jobs:
       
       # Execute train pipeline
       - name: Train pipeline execution
-        run:
+        run: |
           pip install -r requirements.txt
           python src/pipeline/train_pipeline.py
       
