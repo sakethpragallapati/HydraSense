@@ -4,10 +4,17 @@ FROM node:18-alpine
 WORKDIR /app
 
 COPY frontend/package*.json ./
+
 RUN npm config set strict-ssl false
 RUN npm install
 
 COPY frontend/ .
+
+ARG REACT_APP_BACKEND_URL
+ARG REACT_APP_WEATHER_API_KEY
+
+ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
+ENV REACT_APP_WEATHER_API_KEY=$REACT_APP_WEATHER_API_KEY
 
 RUN npm run build
 
