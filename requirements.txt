@@ -2,7 +2,7 @@ numpy
 pandas
 matplotlib
 seaborn
-scikit-learn
+scikit-learn==1.8.0
 xgboost
 lightgbm
 flask
