@@ -5,7 +5,8 @@
 ![Python](https://img.shields.io/badge/ML-Python-3776AB?logo=python)
 ![Docker](https://img.shields.io/badge/DevOps-Docker-2496ED?logo=docker)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?logo=githubactions)
-![Render](https://img.shields.io/badge/Deployment-Render-46E3B7?logo=render)
+[![Frontend](https://img.shields.io/badge/Frontend-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/)
+[![Backend & ML](https://img.shields.io/badge/Backend%20%26%20ML-Hugging%20Face-FFD21E?logo=huggingface&logoColor=black)](https://huggingface.co/)
 
 HydraSense is an end-to-end Machine Learning web application that predicts optimal hydration levels. Unlike generic water trackers, it leverages supervised learning models to analyze physiological attributes (age, weight, gender) along with real-time environmental conditions (weather) to deliver accurate hydration recommendations.
 
@@ -13,22 +14,22 @@ The application is built using a microservices architecture and fully containeri
 
 ## Live Demo
 
-Deployed URL: https://hydrasense.onrender.com
+Deployed URL: [https://your-vercel-app-url.vercel.app](https://your-vercel-app-url.vercel.app)
 
 ## Architecture
 
 The project follows a 3-tier microservices architecture:
 
-1. Frontend (React.js)
+1. **Frontend (React.js)** - Deployed on **Vercel**
    - Responsive user interface for data input
    - Automatic weather detection using browser geolocation and OpenWeatherMap API
 
-2. Backend Gateway (Node.js / Express)
+2. **Backend Gateway (Node.js / Express)** - Deployed on **Hugging Face Spaces** (Docker)
    - Acts as a secure reverse proxy
    - Handles request validation, CORS, and routing
    - Forwards inference requests to the ML service
 
-3. ML Service (Python / Flask)
+3. **ML Service (Python / Flask)** - Deployed on **Hugging Face Spaces** (Docker)
    - Loads the trained model (model.pkl) and preprocessing pipeline (preprocessor.pkl)
    - Exposes a REST API endpoint (/predictData) for predictions
 
@@ -140,24 +141,30 @@ ML Service: http://localhost:7000
 
 ## DevOps and CI/CD
 
-The project uses GitHub Actions for automated CI/CD.
+The project uses a robust GitHub Actions pipeline for automated CI/CD with Continuous Training (CT).
 
-Workflow (main.yml):
-
-- Trigger: Every push or pull requent to the master branch
-- Model Training: Executes src/pipeline/train_pipeline.py
-- Docker Build: Builds images for frontend, backend, and ML service
-- Image Push: Pushes images to Docker Hub
-- Deployment: Triggers Render webhooks to update live services
-
+**Workflow (`main.yml`):**
+1.  **Trigger:** Push or pull request to the `master` branch.
+2.  **Build & Test Job:**
+    * Checks out code.
+    * Executes the ML training pipeline (`src/pipeline/train_pipeline.py`) to generate fresh artifacts.
+    * Builds Docker images for Backend and ML services and pushes them to Docker Hub.
+3.  **Deploy ML to Hugging Face Job:**
+    * **Continuous Training (CT):** Re-runs the training pipeline on a fresh runner to ensure the latest model artifacts are generated right before deployment.
+    * Configures the Hugging Face Space repos.
+    * Force-pushes the application code and the newly generated `artifacts/` folder to the Hugging Face ML Space.
+4.  **Deploy Backend to Hugging Face Job:**
+    * Configures the Hugging Face Space repo.
+    * Force-pushes the backend code to the Hugging Face Backend Space.
+5.  **Frontend Deployment:** Vercel automatically detects changes to the `frontend/` directory on GitHub and deploys the updated React app.
+   
 ## Environment Variables
 
-| Variable                  | Service   | Description                               |
-|---------------------------|-----------|-------------------------------------------|
-| REACT_APP_WEATHER_API_KEY | Frontend  | OpenWeatherMap API key                    |
-| REACT_APP_BACKEND_URL     | Frontend  | Backend service URL                       |
-| FLASK_API_URL             | Backend   | ML service endpoint                       |
-| PORT                      | All       | Service ports (3000, 5000, 7000)          |
+| Variable | Service | Description | Example Value |
+| :--- | :--- | :--- | :--- |
+| `REACT_APP_WEATHER_API_KEY` | Frontend | OpenWeatherMap API key | `your_api_key` |
+| `REACT_APP_BACKEND_URL` | Frontend (Vercel) | URL of the Node.js Backend Space | `https://sasrplays-hydrasense-backend.hf.space` |
+| `FLASK_API_URL` | Backend (HF Space) | URL of the Python ML Space | `https://sasrplays-hydrasense-ml.hf.space` |
 
 ## Author
 
