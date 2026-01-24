@@ -14,7 +14,7 @@ The application is built using a microservices architecture and fully containeri
 
 ## Live Demo
 
-Deployed URL: [https://your-vercel-app-url.vercel.app](https://your-vercel-app-url.vercel.app)
+Deployed URL: [https://hydrasense.vercel.app/](https://hydrasense.vercel.app/)
 
 ## Architecture
 
