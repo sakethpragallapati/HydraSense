@@ -72,12 +72,27 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          # 1. Add the HF remote
+          
+          # 1. FIX: Move the ML Dockerfile to the root so HF can find it
+          cp ml-services/Dockerfile.ml ./Dockerfile
+          
+          # 2. FIX: Create a proper README.md for HF Config
+          echo "---" > README.md
+          echo "title: HydraSense ML" >> README.md
+          echo "sdk: docker" >> README.md
+          echo "emoji: 🦎" >> README.md
+          echo "colorFrom: green" >> README.md
+          echo "colorTo: blue" >> README.md
+          echo "pinned: false" >> README.md
+          echo "---" >> README.md
+          
+          # 3. Add the Remote
           git remote add space https://oauth2:$HF_TOKEN@huggingface.co/spaces/SASRPLAYS/HydraSense-ML
-          # 2. Force Sync: Create a fresh branch with NO history and push it
+          
+          # 4. Force Push the orphan branch
           git checkout --orphan force-deploy
           git add .
-          git commit -m "Force deploy to HF Spaces"
+          git commit -m "Force deploy ML Service"
           git push space force-deploy:main -f
 
   # JOB 3: Deploy Backend to Hugging Face
@@ -96,10 +111,25 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          # 1. Add the HF remote
+          
+          # 1. FIX: Move the Backend Dockerfile to the root
+          cp backend/Dockerfile.backend ./Dockerfile
+          
+          # 2. FIX: Create a proper README.md for HF Config
+          echo "---" > README.md
+          echo "title: HydraSense Backend" >> README.md
+          echo "sdk: docker" >> README.md
+          echo "emoji: 🚀" >> README.md
+          echo "colorFrom: purple" >> README.md
+          echo "colorTo: indigo" >> README.md
+          echo "pinned: false" >> README.md
+          echo "---" >> README.md
+          
+          # 3. Add the Remote
           git remote add space https://oauth2:$HF_TOKEN@huggingface.co/spaces/SASRPLAYS/HydraSense-Backend
-          # 2. Force Sync: Create a fresh branch with NO history and push it
+          
+          # 4. Force Push the orphan branch
           git checkout --orphan force-deploy
           git add .
-          git commit -m "Force deploy to HF Spaces"
+          git commit -m "Force deploy Backend Service"
           git push space force-deploy:main -f
