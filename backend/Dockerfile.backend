@@ -1,13 +1,21 @@
 # backend/Dockerfile.backend
 FROM node:18-alpine
 
+# 1. Create app directory and set permissions
 WORKDIR /app
+RUN chown -R 1000:1000 /app
 
-COPY backend/package*.json ./
+# 2. Switch to node user (ID 1000 is default in node images, but explicit is safer)
+USER 1000
+
+COPY --chown=1000:1000 backend/package*.json ./
 RUN npm install
 
-COPY backend/ .
+COPY --chown=1000:1000 backend/ .
 
-EXPOSE 5000
+# 3. Force the port environment variable
+ENV PORT=7860
+
+EXPOSE 7860
 
 CMD ["node", "server.js"]
