@@ -72,10 +72,13 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          git lfs install
-          git switch master
+          # 1. Add the HF remote
           git remote add space https://oauth2:$HF_TOKEN@huggingface.co/spaces/SASRPLAYS/HydraSense-ML
-          git push space master:main -f
+          # 2. Force Sync: Create a fresh branch with NO history and push it
+          git checkout --orphan force-deploy
+          git add .
+          git commit -m "Force deploy to HF Spaces"
+          git push space force-deploy:main -f
 
   # JOB 3: Deploy Backend to Hugging Face
   deploy-backend-hf:
@@ -93,7 +96,10 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          git lfs install
-          git switch master
+          # 1. Add the HF remote
           git remote add space https://oauth2:$HF_TOKEN@huggingface.co/spaces/SASRPLAYS/HydraSense-Backend
-          git push space master:main -f
+          # 2. Force Sync: Create a fresh branch with NO history and push it
+          git checkout --orphan force-deploy
+          git add .
+          git commit -m "Force deploy to HF Spaces"
+          git push space force-deploy:main -f
