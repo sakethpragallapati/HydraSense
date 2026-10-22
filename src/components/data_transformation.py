@@ -68,8 +68,8 @@ class DataTransformation:
             y_train = train_df.iloc[:,-1]
             y_test = test_df.iloc[:,-1]
 
-            numerical_cols_x = [col for col in x_train.columns if x_train[col].dtype != "O"]
-            categorical_cols_x = [col for col in x_train.columns if x_train[col].dtype == "O"]
+            numerical_cols_x = x_train.select_dtypes(include="number").columns.tolist()
+            categorical_cols_x = x_train.select_dtypes(exclude="number").columns.tolist()
 
             preprocessing_objects = self.get_transformation_object(numerical_cols_x,categorical_cols_x)
 

@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from src.utils import load_object
 from src.exception import CustomException
 from src.logger import logging
+from src.components.model_trainer import BalancedEnsembleLinearSVC
 
 class CustomData:
     def __init__(self,
