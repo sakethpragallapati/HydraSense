@@ -1,173 +1,166 @@
-# HydraSense - AI-Powered Smart Hydration Predictor
+# HydraSense — AI-Powered Smart Hydration Predictor
 
 ![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react)
-![Node.js](https://img.shields.io/badge/Backend-Node.js-339933?logo=nodedotjs)
 ![Python](https://img.shields.io/badge/ML-Python-3776AB?logo=python)
+![Flask](https://img.shields.io/badge/API-Flask-000000?logo=flask)
 ![Docker](https://img.shields.io/badge/DevOps-Docker-2496ED?logo=docker)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?logo=githubactions)
-[![Frontend](https://img.shields.io/badge/Frontend-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/)
-[![Backend & ML](https://img.shields.io/badge/Backend%20%26%20ML-Hugging%20Face-FFD21E?logo=huggingface&logoColor=black)](https://huggingface.co/)
+[![Vercel](https://img.shields.io/badge/Frontend-Vercel-000000?logo=vercel&logoColor=white)](https://hydrasense.vercel.app/)
+[![Hugging Face](https://img.shields.io/badge/ML%20Service-Hugging%20Face-FFD21E?logo=huggingface&logoColor=black)](https://huggingface.co/)
 
-HydraSense is an end-to-end Machine Learning web application that predicts optimal hydration levels. Unlike generic water trackers, it leverages supervised learning models to analyze physiological attributes (age, weight, gender) along with real-time environmental conditions (weather) to deliver accurate hydration recommendations.
+HydraSense is an end-to-end Machine Learning web application that predicts personalized hydration levels. It evaluates physiological metrics (age, weight, gender, daily water intake) alongside environmental factors (weather and activity level) to deliver smart hydration insights.
 
-The application is built using a microservices architecture and fully containerized with Docker. A complete CI/CD pipeline powered by GitHub Actions automates model training, Docker image builds, and image publishing to Docker Hub, followed by continuous deployment to production. The final production models, LinearSVC and XGBoost, both achieved 99.85% accuracy on the test dataset.
+**Live Demo:** [https://hydrasense.vercel.app/](https://hydrasense.vercel.app/)
 
-## Live Demo
+---
 
-Deployed URL: [https://hydrasense.vercel.app/](https://hydrasense.vercel.app/)
+## Features
+
+- **Personalized Hydration Prediction**: Uses a balanced ensemble machine learning model trained on 30,000 health records.
+- **Auto Weather Detection**: Detects local weather conditions (temperature category) via browser geolocation and OpenWeatherMap API.
+- **Zero False-Negative Optimization**: Partition-based ensemble design specifically handles class imbalance to ensure poor hydration conditions are reliably detected.
+- **Automated CI/CD & Continuous Training (CT)**: Automated model retraining, Docker builds, and deployments on GitHub push events.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | React.js, Lucide Icons, Axios, Vercel |
+| **ML & API Service** | Python 3.11, Flask, Flask-CORS, Hugging Face Spaces |
+| **Machine Learning** | Scikit-Learn, Pandas, NumPy, XGBoost, LightGBM |
+| **DevOps & CI/CD** | Docker, Docker Hub, GitHub Actions |
+
+---
 
 ## Architecture
 
-The project follows a 3-tier microservices architecture:
+```
+[ User Browser / React Frontend (Vercel) ]
+                  │
+                  │  POST /predict (JSON)
+                  ▼
+[ ML Inference Service (Flask on Hugging Face Spaces) ]
+                  │
+        Balanced Ensemble LinearSVC
+       (4x Models + Soft Margin Averaging)
+```
 
-1. **Frontend (React.js)** - Deployed on **Vercel**
-   - Responsive user interface for data input
-   - Automatic weather detection using browser geolocation and OpenWeatherMap API
+- **Frontend (React)**: Hosted on Vercel. Gathers user metrics and calls the prediction endpoint.
+- **ML Service (Flask)**: Hosted in a Docker container on Hugging Face Spaces. Serves preprocessing pipelines and model predictions.
+- **Local Gateway (Node.js/Express)**: Included for local multi-container development via Docker Compose.
 
-2. **Backend Gateway (Node.js / Express)** - Deployed on **Hugging Face Spaces** (Docker)
-   - Acts as a secure reverse proxy
-   - Handles request validation, CORS, and routing
-   - Forwards inference requests to the ML service
+---
 
-3. **ML Service (Python / Flask)** - Deployed on **Hugging Face Spaces** (Docker)
-   - Loads the trained model (model.pkl) and preprocessing pipeline (preprocessor.pkl)
-   - Exposes a REST API endpoint (/predictData) for predictions
+## Model Evaluation Benchmark
 
-## Directory Structure
+Models evaluated on the 6,000-sample test set:
 
-The project uses a monorepo structure:
+| Model | Accuracy | Precision | Recall | F1-Score | ROC-AUC | Status |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Balanced Ensemble LinearSVC** | **98.85%** | **98.85%** | **98.85%** | **0.9886** | **0.9912** | **Production Model (0 False Negatives)** |
+| LinearSVC (Single) | 99.85% | 99.85% | 99.85% | 0.9985 | 0.9963 | Unbalanced baseline |
+| XGBoost | 99.85% | 99.85% | 99.85% | 0.9985 | 0.9972 | Gradient boosted trees |
+| Decision Tree | 99.77% | 99.77% | 99.77% | 0.9977 | 0.9964 | Single tree baseline |
+| LightGBM | 99.75% | 99.75% | 99.75% | 0.9975 | 0.9963 | Tree ensemble |
+| Logistic Regression | 99.73% | 99.73% | 99.73% | 0.9973 | 0.9937 | Linear baseline |
+| Gradient Boosting | 99.10% | 99.10% | 99.10% | 0.9910 | 0.9842 | Ensemble baseline |
+| Random Forest | 98.52% | 98.51% | 98.52% | 0.9851 | 0.9747 | Ensemble baseline |
+| K-Nearest Neighbors | 97.07% | 97.05% | 97.07% | 0.9705 | 0.9502 | Distance-based baseline |
+| Gaussian Naive Bayes | 82.82% | 89.45% | 82.82% | 0.8425 | 0.8726 | Probabilistic baseline |
+
+> **Imbalance Handling**: The dataset contains an 80% Good / 20% Poor ratio. To prevent majority bias, the production model partitions the majority samples into 4 balanced 1:1 sub-models and aggregates predictions via decision margin averaging, completely eliminating false negatives on poor hydration.
+
+---
+
+## Project Structure
 
 ```bash
 HydraSense/
-├── .github/workflows/   # CI/CD pipeline using GitHub Actions
-├── artifacts/           # Saved models (.pkl) and processed datasets
-├── backend/             # Node.js middleware service
-├── frontend/            # React application
-├── ml-services/         # Flask-based ML inference service
-├── notebook/            # EDA and model training notebooks
-├── src/                 # Core ML pipeline logic
-├── docker-compose.yml   # Local multi-container orchestration
-└── README.md
+├── .github/workflows/       # GitHub Actions CI/CD workflows
+├── artifacts/               # Saved model (.pkl) & preprocessors
+├── backend/                 # Node.js gateway (optional proxy)
+├── frontend/                # React.js application
+├── ml-services/             # Flask ML inference service
+├── notebook/                # Exploratory Data Analysis & training notebooks
+├── src/                     # Core ML package
+│   ├── components/          # Ingestion, Transformation, Model Trainer
+│   ├── pipeline/            # Training & Prediction pipelines
+│   ├── exception.py         # Custom exception handling
+│   ├── logger.py            # Logging setup
+│   └── utils.py             # Common utilities (pickle save/load)
+├── docker-compose.yml       # Local container orchestration
+└── requirements.txt         # Python dependencies
 ```
 
-## Machine Learning Pipeline
+---
 
-### Dataset
-
-Daily Water Intake and Hydration Patterns Dataset  
-https://www.kaggle.com/datasets/sonalshinde123/daily-water-intake-and-hydration-patterns-dataset
-
-Total records: 30,000
-
-### Models Evaluated
-
-All major classification algorithms were trained and evaluated using the same preprocessing pipeline. Below are the complete evaluation results on the test dataset.
-
-| Model                     | Accuracy | Notes / Status              |
-|---------------------------|----------|-----------------------------|
-| Logistic Regression       | 99.73%   | Strong baseline             |
-| K-Nearest Neighbors       | 97.06%   | Performance drops with scale|
-| LinearSVC                 | 99.85%   | Selected for production     |
-| Gaussian Naive Bayes      | 82.81%   | Underfitting observed       |
-| Decision Tree             | 99.75%   | Slight overfitting risk     |
-| Random Forest             | 98.60%   | Good but heavier model      |
-| Gradient Boosting         | 99.10%   | Stable performance          |
-| XGBoost                   | 99.85%   | Selected for production     |
-| LightGBM                  | 99.75%   | Comparable to tree models   |
-
-### Confusion Matrix Summary
-
-- LinearSVC:
-  - True Negatives: 4788
-  - False Positives: 0
-  - False Negatives: 9
-  - True Positives: 1203
-
-- XGBoost:
-  - True Negatives: 4785
-  - False Positives: 3
-  - False Negatives: 6
-  - True Positives: 1206
-
-These models showed the best balance between accuracy, generalization, and inference speed.
-
-### Pipeline Stages (src/)
-
-1. Data Ingestion
-   - Loads raw dataset
-   - Splits data into training and testing sets
-
-2. Data Transformation
-   - Numerical features scaled using StandardScaler
-   - Categorical features encoded using OneHotEncoder
-
-3. Model Training
-   - Trains multiple classification algorithms
-   - Evaluates models using accuracy and confusion matrix
-   - Persists the best-performing model and preprocessor to artifacts/
-
-## Installation and Local Setup
+## Getting Started
 
 ### Prerequisites
 
-- Docker and Docker Compose
-- Node.js v18 or higher
-- Python v3.11.9 or higher
-- OpenWeatherMap API key
+- Python 3.11+
+- Node.js 18+
+- Docker & Docker Compose *(optional)*
+- OpenWeatherMap API Key *(free tier)*
 
-### Method 1: Docker (Recommended)
+### 1. Clone the Repository
 
-This method launches all three services automatically.
+```bash
+git clone https://github.com/sakethpragallapati/Hydration-Levels-Prediction.git
+cd Hydration-Levels-Prediction
+```
 
-Clone the repository:
+### 2. Run with Docker Compose (Recommended)
 
-git clone https://github.com/sakethpragallapati/Hydration-Levels-Prediction.git  
-cd HydraSense
-
-Create a .env file inside frontend/:
-
-REACT_APP_WEATHER_API_KEY=your_openweather_api_key  
+Create `frontend/.env`:
+```env
+REACT_APP_WEATHER_API_KEY=your_openweather_api_key
 REACT_APP_BACKEND_URL=http://localhost:5000
+```
 
-Run Docker Compose:
-
+Start all services:
+```bash
 docker-compose up --build
+```
+- Frontend: `http://localhost:3000`
+- ML Service: `http://localhost:7000`
 
-Access services locally:
+---
 
-Frontend: http://localhost:3000  
-Backend: http://localhost:5000  
-ML Service: http://localhost:7000
+### 3. Manual Local Setup
 
-## DevOps and CI/CD
+**ML Service**:
+```bash
+python -m venv venv
+.\venv\Scripts\activate
+pip install -r requirements.txt
+python src/pipeline/train_pipeline.py
+python ml-services/app.py
+```
 
-The project uses a robust GitHub Actions pipeline for automated CI/CD with Continuous Training (CT).
+**Frontend**:
+```bash
+cd frontend
+npm install
+npm start
+```
 
-**Workflow (`main.yml`):**
-1.  **Trigger:** Push or pull request to the `master` branch.
-2.  **Build & Test Job:**
-    * Checks out code.
-    * Executes the ML training pipeline (`src/pipeline/train_pipeline.py`) to generate fresh artifacts.
-    * Builds Docker images for Backend and ML services and pushes them to Docker Hub.
-3.  **Deploy ML to Hugging Face Job:**
-    * **Continuous Training (CT):** Re-runs the training pipeline on a fresh runner to ensure the latest model artifacts are generated right before deployment.
-    * Configures the Hugging Face Space repos.
-    * Force-pushes the application code and the newly generated `artifacts/` folder to the Hugging Face ML Space.
-4.  **Deploy Backend to Hugging Face Job:**
-    * Configures the Hugging Face Space repo.
-    * Force-pushes the backend code to the Hugging Face Backend Space.
-5.  **Frontend Deployment:** Vercel automatically detects changes to the `frontend/` directory on GitHub and deploys the updated React app.
-   
+---
+
 ## Environment Variables
 
-| Variable | Service | Description | Example Value |
-| :--- | :--- | :--- | :--- |
-| `REACT_APP_WEATHER_API_KEY` | Frontend | OpenWeatherMap API key | `your_api_key` |
-| `REACT_APP_BACKEND_URL` | Frontend (Vercel) | URL of the Node.js Backend Space | `https://sasrplays-hydrasense-backend.hf.space` |
-| `FLASK_API_URL` | Backend (HF Space) | URL of the Python ML Space | `https://sasrplays-hydrasense-ml.hf.space` |
+| Variable | Scope | Description |
+| :--- | :--- | :--- |
+| `REACT_APP_WEATHER_API_KEY` | Frontend | OpenWeatherMap API key for location-based weather |
+| `REACT_APP_BACKEND_URL` | Frontend | URL of the prediction API service |
+| `FLASK_API_URL` | Backend | URL of the Python ML Service (if using Node gateway) |
+
+---
 
 ## Author
 
-Pragallapati Saketh  
-LinkedIn: https://www.linkedin.com/in/pragallapati-saketh-143384290/  
-GitHub: https://github.com/sakethpragallapati
+**Pragallapati Saketh**  
+- LinkedIn: [https://www.linkedin.com/in/pragallapati-saketh-143384290/](https://www.linkedin.com/in/pragallapati-saketh-143384290/)  
+- GitHub: [https://github.com/sakethpragallapati](https://github.com/sakethpragallapati)
